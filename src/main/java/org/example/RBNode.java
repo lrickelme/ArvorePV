@@ -1,14 +1,14 @@
 package org.example;
 
-public class RedBlackNode {
+public class RBNode {
     private Integer value;
-    private RedBlackNode left, right, parent;
+    private RBNode left, right, parent;
     private boolean color;
 
-    public RedBlackNode(Integer value) {
+    public RBNode(Integer value) {
         this.value = value;
         this.left = this.right = this.parent = null;
-        this.color = true;
+        this.color = true; //Novo nó inicia como vermelho, vermelho = true e preto = false
     }
 
     public Integer getValue() {
@@ -19,27 +19,27 @@ public class RedBlackNode {
         this.value = value;
     }
 
-    public RedBlackNode getLeft() {
+    public RBNode getLeft() {
         return left;
     }
 
-    public void setLeft(RedBlackNode left) {
+    public void setLeft(RBNode left) {
         this.left = left;
     }
 
-    public RedBlackNode getRight() {
+    public RBNode getRight() {
         return right;
     }
 
-    public void setRight(RedBlackNode right) {
+    public void setRight(RBNode right) {
         this.right = right;
     }
 
-    public RedBlackNode getParent() {
+    public RBNode getParent() {
         return parent;
     }
 
-    public void setParent(RedBlackNode parent) {
+    public void setParent(RBNode parent) {
         this.parent = parent;
     }
 

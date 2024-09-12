@@ -1,50 +1,51 @@
 package org.example;
 
 public class RBTree {
-    private RedBlackNode root;
-    private final RedBlackNode child; // Nó sentinela para folhas nulas
+    private RBNode root;
+    private RBNode newNode;
 
     public RBTree() {
-        this.child = new RedBlackNode(0);  // Nó sentinela com valor 0
-        this.child.setColor(false);        // Definir como preto
-        this.child.setLeft(null);
-        this.child.setRight(null);
-        this.root = this.child;            // Inicializar a raiz como nó sentinela
+        this.newNode = new RBNode(0);
+        this.newNode.setColor(false);
+        this.root = this.newNode;
     }
 
     public void insert(int value) {
-        RedBlackNode newNode = new RedBlackNode(value);
-        newNode.setLeft(child);
-        newNode.setRight(child);
+        RBNode newNode = new RBNode(value);
         this.root = insertRecursively(this.root, newNode);
         balanceTree(newNode);
     }
 
-    private RedBlackNode insertRecursively(RedBlackNode current, RedBlackNode newNode) {
-        if (current == child) {
+    private RBNode insertRecursively(RBNode current, RBNode newNode) {
+        if (current == null || current == this.newNode) {
             return newNode;
         }
 
         if (newNode.getValue() < current.getValue()) {
             current.setLeft(insertRecursively(current.getLeft(), newNode));
-            current.getLeft().setParent(current);
+            if (current.getLeft() != null) {
+                current.getLeft().setParent(current);
+            }
         } else {
             current.setRight(insertRecursively(current.getRight(), newNode));
-            current.getRight().setParent(current);
+            if (current.getRight() != null) {
+                current.getRight().setParent(current);
+            }
         }
 
         return current;
     }
 
-    private void balanceTree(RedBlackNode insertedNode) {
+    private void balanceTree(RBNode insertedNode) {
         while (insertedNode != this.root && insertedNode.getParent().isColor()) {
-            RedBlackNode parent = insertedNode.getParent();
-            RedBlackNode grandparent = insertedNode.getParent().getParent();
+
+            RBNode parent = insertedNode.getParent();
+            RBNode grandparent = parent.getParent();
 
             if (parent == grandparent.getRight()) {
-                RedBlackNode uncle = grandparent.getLeft();
+                RBNode uncle = grandparent.getLeft();
 
-                if (uncle.isColor()) {
+                if ((uncle != this.newNode && uncle != null) && uncle.isColor()) {
                     uncle.setColor(false);
                     parent.setColor(false);
                     grandparent.setColor(true);
@@ -59,9 +60,9 @@ public class RBTree {
                     rotateLeft(grandparent);
                 }
             } else {
-                RedBlackNode uncle = grandparent.getRight();
+                RBNode uncle = grandparent.getRight();
 
-                if (uncle.isColor()) {
+                if ((uncle != this.newNode && uncle != null) && uncle.isColor()) {
                     uncle.setColor(false);
                     parent.setColor(false);
                     grandparent.setColor(true);
@@ -80,11 +81,16 @@ public class RBTree {
         this.root.setColor(false);
     }
 
-    private void rotateLeft(RedBlackNode node) {
-        RedBlackNode rightChild = node.getRight();
+    private void rotateLeft(RBNode node) {
+        RBNode rightChild = node.getRight();
+
+        if (rightChild == null) {
+            return;
+        }
+
         node.setRight(rightChild.getLeft());
 
-        if (rightChild.getLeft() != this.child) {
+        if (rightChild.getLeft() != null && rightChild.getLeft() != this.newNode) {
             rightChild.getLeft().setParent(node);
         }
 
@@ -101,11 +107,16 @@ public class RBTree {
         node.setParent(rightChild);
     }
 
-    private void rotateRight(RedBlackNode node) {
-        RedBlackNode leftChild = node.getLeft();
+    private void rotateRight(RBNode node) {
+        RBNode leftChild = node.getLeft();
+
+        if (leftChild == null) {
+            return;
+        }
+
         node.setLeft(leftChild.getRight());
 
-        if (leftChild.getRight() != this.child) {
+        if (leftChild.getRight() != null && leftChild.getRight() != this.newNode) {
             leftChild.getRight().setParent(node);
         }
 
@@ -127,24 +138,28 @@ public class RBTree {
         System.out.println();
     }
 
-    private void printInOrderHelper(RedBlackNode node) {
-        if (node != child) {
+    private void printInOrderHelper(RBNode node) {
+        if (node != newNode && node != null) {
             printInOrderHelper(node.getLeft());
-            String sColor = node.isColor() ? "\033[31m" : "\033[30m";
-            System.out.print("(" + sColor + node.getValue() + "\033[0m), ");
+            String color = node.isColor() ? "\033[31m" : "\033[30m";
+            System.out.print("(" + color + node.getValue() + "\033[0m), ");
             printInOrderHelper(node.getRight());
         }
     }
 
-    public RedBlackNode getRoot() {
+    public RBNode getRoot() {
         return root;
     }
 
-    public void setRoot(RedBlackNode root) {
+    public void setRoot(RBNode root) {
         this.root = root;
     }
 
-    public RedBlackNode getChild() {
-        return child;
+    public RBNode getnewNode() {
+        return newNode;
+    }
+
+    public void setnewNode(RBNode newNode) {
+        this.newNode = newNode;
     }
 }
